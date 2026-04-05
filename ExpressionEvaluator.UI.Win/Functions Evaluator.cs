@@ -211,7 +211,7 @@ namespace ExpressionEvaluator.UI.Win
         }
 
         private void btnDelete_Click_1(object sender, EventArgs e)
-        {
+        { 
             textDisplay.Text = textDisplay.Text.Substring(0, textDisplay.Text.Length - 1);
         }
 
