@@ -12,10 +12,21 @@ public class Evaluator
     {
         var postFix = string.Empty;
         var stack = new Stack<char>();
+        var number = "";
         foreach (var item in infix)
         {
-            if (IsOperator(item))
+            if (char.IsDigit(item) || item == '.')
             {
+                number += item;
+            }
+            else if (IsOperator(item))
+            {
+                if (number != "")
+                {
+                    postFix += number + " ";
+                    number = "";
+                }
+
                 if (stack.Count == 0)
                 {
                     stack.Push(item);
@@ -26,7 +37,7 @@ public class Evaluator
                     {
                         do
                         {
-                            postFix += stack.Pop();
+                            postFix += stack.Pop() + " ";
                         } while (stack.Peek() != '(');
                         stack.Pop();
                     }
@@ -38,22 +49,25 @@ public class Evaluator
                         }
                         else
                         {
-                            postFix += stack.Pop();
+                            postFix += stack.Pop() + " ";
                             stack.Push(item);
                         }
                     }
                 }
             }
-            else
-            {
-                postFix += item;
-            }
+
         }
+        if (number != "")
+        {
+            postFix += number + " ";
+        }
+
+        
         while (stack.Count > 0)
         {
-            postFix += stack.Pop();
+            postFix += stack.Pop() + " ";
         }
-        return postFix;
+        return postFix.Trim();
     }
 
     private static int PriorityStack(char item) => item switch
@@ -81,10 +95,31 @@ public class Evaluator
     private static double EvaluatePostfix(string postfix)
     {
         var stack = new Stack<double>();
+        var number = "";
         foreach (char item in postfix)
+        
         {
-            if (IsOperator(item))
+            if (char.IsDigit(item) || item == '.')
             {
+                number += item;
+            }
+            else if ( item == ' ')
+            {
+                if (number != "")
+                {
+                    stack.Push(double.Parse(number, System.Globalization.CultureInfo.InvariantCulture));
+                    number = "";
+                }
+
+            }
+            else if (IsOperator(item))
+            {
+                if (number != "")
+                {
+                    stack.Push(double.Parse(number, System.Globalization.CultureInfo.InvariantCulture));
+                    number = "";
+                }
+
                 var b = stack.Pop();
                 var a = stack.Pop();
                 stack.Push(item switch
@@ -97,10 +132,11 @@ public class Evaluator
                     _ => throw new Exception("Sintax error."),
                 });
             }
-            else
-            {
-                stack.Push(double.Parse(item.ToString()));
-            }
+            
+        }
+        if (number != "")
+        {
+            stack.Push(double.Parse(number, System.Globalization.CultureInfo.InvariantCulture));
         }
         return stack.Pop();
     }

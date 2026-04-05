@@ -207,7 +207,7 @@ namespace ExpressionEvaluator.UI.Win
 
         private void btnResult_Click_1(object sender, EventArgs e)
         {
-            textDisplay.Text = $"={Evaluator.Evaluate(textDisplay.Text)}";
+            textDisplay.Text = "=" + Evaluator.Evaluate(textDisplay.Text).ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
 
         private void btnDelete_Click_1(object sender, EventArgs e)
